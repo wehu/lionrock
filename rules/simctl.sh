@@ -13,9 +13,9 @@ export SYSTEMC_LIBDIR=`pwd`/external/systemc/lib-linux
 
 cd $ws
 pwd
-if [ "$vendor" == "iverilog" ]; then
-  iverilog -f $vf -o $output
-elif [ "$vendor" == "vcs" ]; then
+#if [ "$vendor" == "iverilog" ]; then
+#  iverilog -f $vf -o $output
+if [ "$vendor" == "vcs" ]; then
   vcs -DVCS -f $vf -o $output
 elif [ "$vendor" == "verilator" ]; then
   cat <<EOF >$top_module.cpp

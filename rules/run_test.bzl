@@ -13,9 +13,9 @@ def _run_test_impl(ctx):
            if f.extension == "exe" or f.extension == ""]
 
   simulator = ""
-  if vendor == "iverilog":
-    simulator = "vvp"
-  elif vendor == "verilator":
+#  if vendor == "iverilog":
+#    simulator = "vvp"
+  if vendor == "verilator":
     simulator = ""
   elif vendor == "vcs":
     simulator = ""
