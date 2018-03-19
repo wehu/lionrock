@@ -7,14 +7,16 @@ top_module=$3
 output=$4
 vf=$5
 
-export VERILATOR_ROOT=`pwd`/external/verilator
-export SYSTEMC_INCLUDE=`pwd`/external/systemc/include
-export SYSTEMC_LIBDIR=`pwd`/external/systemc/lib-linux
+WORKSPACE_ROOT=`pwd`
+
+export VERILATOR_ROOT=$WORKSPACE_ROOT/external/verilator
+export SYSTEMC_INCLUDE=$WORKSPACE_ROOT/external/systemc/include
+export SYSTEMC_LIBDIR=$WORKSPACE_ROOT/external/systemc/lib-linux
 
 cd $ws
-pwd
-#if [ "$vendor" == "iverilog" ]; then
-#  iverilog -f $vf -o $output
+
+sed -i "s|\$WORKSPACE_ROOT|$WORKSPACE_ROOT|g" $vf
+
 if [ "$vendor" == "vcs" ]; then
   vcs -DVCS -f $vf -o $output
 elif [ "$vendor" == "verilator" ]; then

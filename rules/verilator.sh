@@ -9,11 +9,16 @@ hdr=$5
 dpi_hdr=$6
 vf=$7
 
-export VERILATOR_ROOT=`pwd`/external/verilator
-export SYSTEMC_INCLUDE=`pwd`/external/systemc/include
-export SYSTEMC_LIBDIR=`pwd`/external/systemc/lib-linux
+WORKSPACE_ROOT=`pwd`
+
+export VERILATOR_ROOT=$WORKSPACE_ROOT/external/verilator
+export SYSTEMC_INCLUDE=$WORKSPACE_ROOT/external/systemc/include
+export SYSTEMC_LIBDIR=$WORKSPACE_ROOT/external/systemc/lib-linux
 
 cd $ws
+
+sed -i "s|\$WORKSPACE_ROOT|$WORKSPACE_ROOT|g" $vf
+
 $VERILATOR_ROOT/bin/verilator --$mode -f $vf
 cd obj_dir
 make -j -f V$top_module.mk USER_CPPFLAGS="-DSC_CPLUSPLUS=199711L"

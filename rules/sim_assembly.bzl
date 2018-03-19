@@ -18,27 +18,12 @@ def sim_all_inputs(ctx):
                         + [dep.files for dep in ctx.attr.deps],
            order="topological")
 
-sep = "/"
-
-def get_relative_depth(ws):
-  vf_depth = ws.split(sep)
-  rel_depth = []
-  for d in vf_depth:
-    rel_depth.append("..")
-  depth = sep.join(rel_depth)
-  return depth
-
 def sim_assembly(ctx):
+
+  sep = "/"
 
   vf = ctx.outputs.vf
   ws = vf.dirname
-
-  vendor = ""
-  if hasattr(ctx.attr, "vendor"):
-    vendor = ctx.attr.vendor
-
-  # relative depth
-  depth = get_relative_depth(ws)
 
   content = []
 
@@ -53,14 +38,14 @@ def sim_assembly(ctx):
     incs = [inc.path for inc in reversed(dep[FileCollector].incs.to_list())] \
            + [feature.dirname for feature in reversed(dep[FileCollector].features.to_list())]
     for inc in incs:
-      content.append("+incdir+{}/{}".format(depth, inc))
+      content.append("+incdir+$WORKSPACE_ROOT{}{}".format(sep, inc))
 
   # system verilog
   for dep in ctx.attr.deps:
     files = [f.path for f in reversed(dep[FileCollector].files.to_list())
              if f.extension in ["sv"]]
     for f in files:
-       content.append("{}{}{}".format(depth, sep, f))
+       content.append("$WORKSPACE_ROOT{}{}".format(sep, f))
 
   # verilog files
   top_module_file = ""
@@ -74,19 +59,16 @@ def sim_assembly(ctx):
        if top_module_file == "":
          top_module_file = f
        if top_module_file != f:
-         content.append("-v {}{}{}".format(depth, sep, f))
+         content.append("-v $WORKSPACE_ROOT{}{}".format(sep, f))
 
-  content.append("{}{}{}".format(depth, sep, top_module_file))
+  content.append("$WORKSPACE_ROOT{}{}".format(sep, top_module_file))
 
   # library
   for dep in ctx.attr.deps:
     files = [f.path for f in reversed(dep[FileCollector].files.to_list())
              if f.extension in ["a", "so"]]
     for f in files:
-       d = depth
-       if vendor == "verilator":
-         d = "../{}".format(depth)
-       content.append("{}{}{}".format(d, sep, f))
+       content.append("$WORKSPACE_ROOT{}{}".format(sep, f))
 
   content += [""] # trailing newline
 
