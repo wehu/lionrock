@@ -7,3 +7,8 @@ cc_library(
   includes = ["include"],
   deps = ["@systemc//:systemc"],
 )
+
+filegroup(
+  name = "uvm_systemc_filegroup",
+  srcs = glob(["**"]),
+)

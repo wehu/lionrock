@@ -9,8 +9,12 @@ hdr=$5
 dpi_hdr=$6
 vf=$7
 
+export VERILATOR_ROOT=`pwd`/external/verilator
+export SYSTEMC_INCLUDE=`pwd`/external/systemc/include
+export SYSTEMC_LIBDIR=`pwd`/external/systemc/lib-linux
+
 cd $ws
-verilator --$mode -f $vf
+$VERILATOR_ROOT/bin/verilator --$mode -f $vf
 cd obj_dir
 make -j -f V$top_module.mk
 make -j -f V$top_module.mk verilated.o

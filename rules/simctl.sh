@@ -7,6 +7,10 @@ top_module=$3
 output=$4
 vf=$5
 
+export VERILATOR_ROOT=`pwd`/external/verilator
+export SYSTEMC_INCLUDE=`pwd`/external/systemc/include
+export SYSTEMC_LIBDIR=`pwd`/external/systemc/lib-linux
+
 cd $ws
 pwd
 if [ "$vendor" == "iverilog" ]; then
@@ -38,7 +42,7 @@ elif [ "$vendor" == "verilator" ]; then
           exit(0);
       }
 EOF
-  verilator --cc -f $vf --exe $top_module.cpp
+  $VERILATOR_ROOT/bin/verilator --cc -f $vf --exe $top_module.cpp
   cd obj_dir
   make -j -f V$top_module.mk V$top_module
   cd -

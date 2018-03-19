@@ -8,3 +8,9 @@ cc_library(
   defines = ["SC_CPLUSPLUS=199711L"],
   linkopts = ["-lpthread"]
 )
+
+filegroup(
+  name = "systemc_filegroup",
+  srcs = glob(["**"]),
+)
+

@@ -21,9 +21,11 @@ def _sim_build_rule_impl(ctx):
   inputs = sim_all_inputs(ctx)
 
   simctl = ctx.executable._simctl
+  verilator_files = ctx.attr._verilator_filegroup.files
+  systemc_files = ctx.attr._systemc_filegroup.files
   ctx.actions.run(executable = simctl,
     arguments = [vendor, ws, top_module, out.basename, vf.basename],
-    inputs = inputs + [vf, simctl],
+    inputs = inputs + [vf, simctl] + verilator_files + systemc_files,
     outputs = [out],
     use_default_shell_env=True)
 
@@ -34,7 +36,9 @@ sim_build = rule(
     "vendor": attr.string(default=default_vendor),
     "top_module_file": attr.label(allow_single_file=True),
     "_simctl": attr.label(default=Label("//rules:simctl"),
-                          allow_files=True, executable=True, cfg="host")
+                          allow_files=True, executable=True, cfg="host"),
+    "_verilator_filegroup": attr.label(default="@verilator//:verilator_filegroup"),
+    "_systemc_filegroup": attr.label(default="@systemc//:systemc_filegroup"),
   },
   outputs = {"vf": "sim/%{name}/%{name}.files",
              "out": "sim/%{name}/%{name}.exe"},

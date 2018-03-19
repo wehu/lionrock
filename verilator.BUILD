@@ -5,3 +5,8 @@ cc_library(
   hdrs = glob(["include/*.h"]),
   includes = ["include"],
 )
+
+filegroup(
+  name = "verilator_filegroup",
+  srcs = glob(["**"]),
+)

@@ -23,9 +23,11 @@ def _verilator_library_rule_impl(ctx):
   inputs = sim_all_inputs(ctx)
 
   verilator = ctx.executable._verilator
+  verilator_files = ctx.attr._verilator_filegroup.files
+  systemc_files = ctx.attr._systemc_filegroup.files
   ctx.actions.run(executable = verilator,
     arguments = [ws, top_module, mode, lib.basename, hdr.basename, dpi_hdr.basename, vf.basename],
-    inputs = inputs + [vf, verilator],
+    inputs = inputs + [vf, verilator] + verilator_files + systemc_files,
     outputs = [lib, hdr, dpi_hdr, varilated],
     use_default_shell_env=True)
 
@@ -37,7 +39,9 @@ verilator_library = rule(
     "vendor": attr.string(default="verilator"),
     "top_module_file": attr.label(allow_single_file=True),
     "_verilator": attr.label(default=Label("//rules:verilator"),
-                          allow_files=True, executable=True, cfg="host")
+                          allow_files=True, executable=True, cfg="host"),
+    "_verilator_filegroup": attr.label(default="@verilator//:verilator_filegroup"),
+    "_systemc_filegroup": attr.label(default="@systemc//:systemc_filegroup"),
   },
   output_to_genfiles = True,
   outputs = {"vf": "%{name}.files",
