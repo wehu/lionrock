@@ -16,8 +16,8 @@ export SYSTEMC_LIBDIR=`pwd`/external/systemc/lib-linux
 cd $ws
 $VERILATOR_ROOT/bin/verilator --$mode -f $vf
 cd obj_dir
-make -j -f V$top_module.mk
-make -j -f V$top_module.mk verilated.o
+make -j -f V$top_module.mk USER_CPPFLAGS="-DSC_CPLUSPLUS=199711L"
+make -j -f V$top_module.mk verilated.o USER_CPPFLAGS="-DSC_CPLUSPLUS=199711L"
 cd -
 cp obj_dir/V${top_module}__ALL.a $lib -f
 cp obj_dir/V${top_module}.h $hdr -f

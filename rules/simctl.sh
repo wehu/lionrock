@@ -44,7 +44,7 @@ elif [ "$vendor" == "verilator" ]; then
 EOF
   $VERILATOR_ROOT/bin/verilator --cc -f $vf --exe $top_module.cpp
   cd obj_dir
-  make -j -f V$top_module.mk V$top_module
+  make -j -f V$top_module.mk V$top_module USER_CPPFLAGS="-DSC_CPLUSPLUS=199711L"
   cd -
   cp obj_dir/V$top_module $output -f
 else
